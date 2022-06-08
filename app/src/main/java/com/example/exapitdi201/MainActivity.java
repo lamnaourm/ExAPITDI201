@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class DownLoadImageTask extends AsyncTask<String, Void, Bitmap> {
+    class DownLoadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView imageView;
 
         public DownLoadImageTask(ImageView imageView) {
