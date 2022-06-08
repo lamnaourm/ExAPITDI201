@@ -3,9 +3,12 @@ package com.example.exapitdi201;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.renderscript.ScriptGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,6 +18,7 @@ import org.json.JSONException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -32,13 +36,6 @@ public class MainActivity extends AppCompatActivity {
         t = findViewById(R.id.t);
         ReadAPiPays p = new ReadAPiPays();
         p.execute("https://gorest.co.in/public/v2/users");
-
-
-    }
-
-
-    public void methode(int...par){
-
     }
 
     class ReadAPiPays extends AsyncTask<String, Void,String> {
@@ -80,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
                 String url = strings[0];
                 URL Myurl = new URL(url);
                 HttpURLConnection connection = (HttpURLConnection)Myurl.openConnection();
+                connection.setRequestMethod("GET");
 
                 InputStreamReader input = new InputStreamReader(connection.getInputStream());
                 BufferedReader buffer = new BufferedReader(input);
@@ -98,6 +96,30 @@ public class MainActivity extends AppCompatActivity {
             }
 
             return res.toString();
+        }
+    }
+
+    private class DownLoadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView imageView;
+
+        public DownLoadImageTask(ImageView imageView) {
+            this.imageView = imageView;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urlOfImage = urls[0];
+            Bitmap logo = null;
+            try {
+                InputStream is = new URL(urlOfImage).openStream();
+                logo = BitmapFactory.decodeStream(is);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return logo;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            imageView.setImageBitmap(result);
         }
     }
 }
